@@ -101,27 +101,16 @@ function render(){
 </script><script>
 (function(){
   function fit(){
-    var wrap=document.querySelector('.wrap'),tb=document.querySelector('#t tbody'),thd=document.querySelector('#t thead');
-    if(!wrap||!tb||!thd)return;
-    var vh=window.innerHeight,note=document.querySelector('.note');
+    var wrap=document.querySelector('.wrap'),note=document.querySelector('.note');
+    if(!wrap)return;
     wrap.style.maxHeight='none';wrap.style.height='auto';
     var top=wrap.getBoundingClientRect().top;
     var below=(note?note.offsetHeight+4:0)+10;
-    var avail=Math.max(200,vh-top-below);
+    var avail=Math.max(200,window.innerHeight-top-below);
     wrap.style.height=avail+'px';wrap.style.maxHeight=avail+'px';
-    var rows=tb.rows.length||1,th=thd.offsetHeight;
-    var groups=tb.querySelectorAll('tr.first').length;
-    var rowH=(avail-th-groups*2-6)/rows;
-    var fs=Math.max(8,Math.min(12.5,(rowH-1)*0.64));
-    var pad=Math.max(0,Math.min(4,(rowH-1-fs*1.25)/2));
-    var dot=Math.max(10,Math.min(17,rowH-2));
-    var st=document.getElementById('fitdyn');
-    if(!st){st=document.createElement('style');st.id='fitdyn';document.head.appendChild(st);}
-    st.textContent='#t{font-size:'+fs+'px}#t tbody td{padding-top:'+pad+'px;padding-bottom:'+pad+'px;line-height:1.2}#t tbody td.sec{padding-top:'+pad+'px}#t .ok,#t .rg{width:'+dot+'px;height:'+dot+'px;line-height:'+dot+'px;font-size:'+Math.max(8,dot-6)+'px}';
   }
   var raf=0;function sched(){cancelAnimationFrame(raf);raf=requestAnimationFrame(fit);}
   window.addEventListener('resize',sched);
-  new MutationObserver(sched).observe(document.querySelector('#t tbody'),{childList:true});
   sched();setTimeout(fit,300);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(sched);
 })();
